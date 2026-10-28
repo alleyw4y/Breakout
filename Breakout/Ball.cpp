@@ -1,12 +1,12 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
 
-Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
-    : _window(window), _velocity(velocity), _gameManager(gameManager),
+Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager, Camera* camera)
+    : _window(window), _velocity(velocity), _gameManager(gameManager), _camera(camera),
     _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
 {
     _sprite.setRadius(RADIUS);
-    _sprite.setFillColor(sf::Color::Cyan);
+    _sprite.setFillColor(sf::Color::Color(205, 180, 219));
     _sprite.setPosition(0, 300);
 }
 
@@ -28,7 +28,7 @@ void Ball::update(float dt)
         else
         {
             setFireBall(0);    // disable fireball
-            _sprite.setFillColor(sf::Color::Cyan);  // back to normal colour.
+            _sprite.setFillColor(sf::Color::Color(205, 180, 219));  // back to normal colour.
         }        
     }
 
@@ -85,10 +85,12 @@ void Ball::update(float dt)
     if (collisionResponse == 1)
     {
         _direction.x *= -1; // Bounce horizontally
+        onWallHit();
     }
     else if (collisionResponse == 2)
     {
         _direction.y *= -1; // Bounce vertically
+        onWallHit();
     }
 }
 
@@ -113,4 +115,9 @@ void Ball::setFireBall(float duration)
     }
     _isFireBall = false;
     _timeWithPowerupEffect = 0.f;    
+}
+
+void Ball::onWallHit()
+{
+    _camera->shake();
 }

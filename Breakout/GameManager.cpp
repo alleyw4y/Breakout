@@ -5,22 +5,23 @@
 
 GameManager::GameManager(sf::RenderWindow* window)
     : _window(window), _paddle(nullptr), _ball(nullptr), _brickManager(nullptr), _powerupManager(nullptr),
-    _messagingSystem(nullptr), _ui(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
+    _messagingSystem(nullptr), _ui(nullptr), _camera(nullptr), _pause(false), _time(0.f), _lives(3), _pauseHold(0.f), _levelComplete(false),
     _powerupInEffect({ none,0.f }), _timeLastPowerupSpawned(0.f)
 {
     _font.loadFromFile("font/montS.ttf");
     _masterText.setFont(_font);
     _masterText.setPosition(50, 400);
     _masterText.setCharacterSize(48);
-    _masterText.setFillColor(sf::Color::Yellow);
+    _masterText.setFillColor(sf::Color::Color(205, 180, 219));
 }
 
 void GameManager::initialize()
 {
+    _camera = new Camera(_window, this);
     _paddle = new Paddle(_window);
     _brickManager = new BrickManager(_window, this);
     _messagingSystem = new MessagingSystem(_window);
-    _ball = new Ball(_window, 400.0f, this); 
+    _ball = new Ball(_window, 400.0f, this, _camera); 
     _powerupManager = new PowerupManager(_window, _paddle, _ball);
     _ui = new UI(_window, _lives, this);
 
@@ -85,6 +86,7 @@ void GameManager::update(float dt)
     _paddle->update(dt);
     _ball->update(dt);
     _powerupManager->update(dt);
+    _camera->update(dt);
 }
 
 void GameManager::loseLife()
