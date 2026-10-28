@@ -24,6 +24,8 @@ private:
     bool _isAlive;
     bool _isFireBall;
     float _timeWithPowerupEffect;
+    int _comboNum;
+    int _comboSize = 50;
 
     GameManager* _gameManager;  // Reference to the GameManager
     Camera* _camera; //reference to camera for shake

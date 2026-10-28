@@ -112,6 +112,17 @@ void GameManager::levelComplete()
     _levelComplete = true;
 }
 
+void GameManager::gainLife()
+{
+    _lives++;
+    _ui->lifeGain(_lives);
+}
+
+void GameManager::comboUpdate(std::string comboNum, int size)
+{
+    _ui->updateComboText(comboNum, size);
+}
+
 sf::RenderWindow* GameManager::getWindow() const { return _window; }
 UI* GameManager::getUI() const { return _ui; }
 Paddle* GameManager::getPaddle() const { return _paddle; }

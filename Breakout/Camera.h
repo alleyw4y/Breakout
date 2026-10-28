@@ -14,10 +14,9 @@ public:
     void render();
     void shake();
 
-    float shakeVal;
-    sf::Vector2f offset;
-    float offsetRot;
-    sf::Time time = sf::seconds(4);
+    float _shakeVal;
+    sf::Vector2f _offset;
+    float _offsetRot;
 private:
 
     sf::RenderWindow* _window;

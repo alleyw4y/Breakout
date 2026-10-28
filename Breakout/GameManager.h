@@ -20,6 +20,8 @@ public:
     void render();
     void levelComplete();
     void powerupEffect(POWERUPS pu, float t);
+    void gainLife();
+    void comboUpdate(std::string comboNum, int size);
 
     Paddle* getPaddle() const;
     BrickManager* getBrickManager() const;

@@ -3,7 +3,7 @@
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager, Camera* camera)
     : _window(window), _velocity(velocity), _gameManager(gameManager), _camera(camera),
-    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1})
+    _timeWithPowerupEffect(0.f), _isFireBall(false), _isAlive(true), _direction({1,1}), _comboNum(0)
 {
     _sprite.setRadius(RADIUS);
     _sprite.setFillColor(sf::Color::Color(205, 180, 219));
@@ -65,6 +65,8 @@ void Ball::update(float dt)
         _sprite.setPosition(0, 300);
         _direction = { 1, 1 };
         _gameManager->loseLife();
+        _comboNum = 0;
+        _comboSize = 50;
     }
 
     // collision with paddle
@@ -77,6 +79,10 @@ void Ball::update(float dt)
 
         // Adjust position to avoid getting stuck inside the paddle
         _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+
+        //reset combo number
+        _comboNum = 0;
+        _comboSize = 50;
     }
 
     // collision with bricks
@@ -86,11 +92,27 @@ void Ball::update(float dt)
     {
         _direction.x *= -1; // Bounce horizontally
         onWallHit();
+        _comboNum++;
+        _comboSize += 3;
     }
     else if (collisionResponse == 2)
     {
         _direction.y *= -1; // Bounce vertically
         onWallHit();
+        _comboNum++;
+        _comboSize += 3;
+    }
+
+    //add extra life
+    if (_comboNum == 10)
+    {
+        _gameManager->gainLife();
+        _comboNum = 0;
+        _comboSize = 50;
+    }
+    else
+    {
+        _gameManager->comboUpdate(std::to_string(_comboNum), _comboSize);
     }
 }
 

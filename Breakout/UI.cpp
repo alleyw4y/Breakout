@@ -3,6 +3,8 @@
 #include "UI.h"
 #include "GameManager.h"
 #include <iomanip>
+#include <thread>
+#include <chrono>
 
 UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager) 
 	: _window(window), _gameManager(gameManager)
@@ -22,6 +24,17 @@ UI::UI(sf::RenderWindow* window, int lives, GameManager* gameManager)
 	_powerupText.setFillColor(sf::Color::Color(162, 210, 255));
 	_font.loadFromFile("font/montS.ttf");
 	_powerupText.setFont(_font);
+
+	_comboText.setCharacterSize(50);
+	_comboText.setPosition(900, 700);
+	_comboText.setFillColor(sf::Color::Color(162, 210, 255));
+	_font.loadFromFile("font/CarterOne-Regular.ttf");
+	_comboText.setFont(_font);
+
+	_newLifeText.setCharacterSize(50);
+	_newLifeText.setPosition(800, 700);
+	_newLifeText.setFillColor(sf::Color::Color(162, 210, 255));
+	_newLifeText.setFont(_font);
 }
 
 UI::~UI()
@@ -67,16 +80,44 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 	}
 }
 
+void UI::updateComboText(std::string combo, int size)
+{
+	_comboText.setCharacterSize(size);
+
+	_comboText.setFillColor(sf::Color::Color(162 - (size - 50), 210 - (size - 50), 255 - (size - 50)));
+
+	_comboText.setString(combo);
+}
+
 void UI::lifeLost(int lives)
 {
-	_lives[_lives.size() - 1 - lives].setFillColor(sf::Color::Transparent);
+	if (lives < 3)
+	{
+		_lives[_lives.size() - 1 - lives].setFillColor(sf::Color::Transparent);
+	}
+	else
+	{
+		_lives.pop_back();
+	}
 }
 
 void UI::render()
 {
 	_window->draw(_powerupText);
+	_window->draw(_comboText);
 	for (sf::CircleShape life : _lives)
 	{
 		_window->draw(life);
 	}
+}
+
+void UI::lifeGain(int lives)
+{
+	sf::CircleShape newLife;
+	newLife.setFillColor(sf::Color::Color(205, 180, 219));
+	newLife.setOutlineColor(sf::Color::Color(162, 210, 255));
+	newLife.setOutlineThickness(4.0f);
+	newLife.setRadius(LIFE_RADIUS);
+	newLife.setPosition((LIFE_RADIUS * 2 + LIFE_PADDING) * lives, LIFE_PADDING);
+	_lives.push_back(newLife);
 }

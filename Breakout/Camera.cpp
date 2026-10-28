@@ -8,8 +8,8 @@ Camera::Camera(sf::RenderWindow* window, GameManager* gameManager)
     _centre = sf::Vector2f(_view.getSize().x / 2, _view.getSize().y / 2);
     _view.setCenter(_centre);
 
-    shakeVal = 0;
-    offset = sf::Vector2f(0, 0);
+    _shakeVal = 0;
+    _offset = sf::Vector2f(0, 0);
 }
 
 Camera::~Camera()
@@ -17,7 +17,7 @@ Camera::~Camera()
 
 void Camera::update(float dt)
 {
-    if (shakeVal <= 0)
+    if (_shakeVal <= 0)
     {
         _view.setCenter(_centre);
         _view.setRotation(0);
@@ -26,16 +26,16 @@ void Camera::update(float dt)
     }
 
     //juice effects
-    offset.x = ((rand() % 100) - 50) * shakeVal; //random num between -10 and 10
-    offset.y = ((rand() % 100) - 50) * shakeVal;
-    offsetRot = ((rand() % 1) - 0.5) * shakeVal; //random num between -0.5 and 0.5
+    _offset.x = ((rand() % 100) - 50) * _shakeVal; //random num between -10 and 10
+    _offset.y = ((rand() % 100) - 50) * _shakeVal;
+    _offsetRot = ((rand() % 1) - 0.5) * _shakeVal; //random num between -0.5 and 0.5
 
-    _view.setCenter(sf::Vector2f(_view.getCenter() + offset));
-    _view.setRotation(_view.getRotation() + offsetRot);
+    _view.setCenter(sf::Vector2f(_view.getCenter() + _offset));
+    _view.setRotation(_view.getRotation() + _offsetRot);
     _window->setView(_view);
 
     //time += sf::seconds(dt);
-    shakeVal -= 0.1;
+    _shakeVal -= 0.1;
 }
 
 void Camera::render()
@@ -45,6 +45,6 @@ void Camera::render()
 
 void Camera::shake()
 {
-    shakeVal += 1;
+    _shakeVal += 1;
     //time = sf::seconds(0);
 }
